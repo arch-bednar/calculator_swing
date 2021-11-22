@@ -6,31 +6,31 @@ import javax.swing.JFrame;
 import java.awt.Dimension;
 import java.awt.Color;
 import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.util.ArrayList;
 
-public class Calculator extends JFrame implements ActionListener{
+public class Calculator extends JFrame {
 
-    GridBagConstraints constraints;
-    GridBagLayout bagLayout;
-    Container container;
-    JTextField field;
+    private GridBagConstraints constraints;
+    private GridBagLayout bagLayout;
+    private Container container;
+    public JTextField field;
     History history;
+    String result;
+    char state = 10;
 
     Calculator(String title){
         super(title);
         makeFrame();
         makeLayout();
+        result="";
     }
 
     public void makeFrame(){
-        this.setSize(new Dimension(300, 390));
+        this.setSize(new Dimension(300, 300));
         this.setBackground(Color.GRAY);
         this.setVisible(true);
         this.setResizable(false);
@@ -44,7 +44,7 @@ public class Calculator extends JFrame implements ActionListener{
         container = this.getContentPane();
         container.setLayout(bagLayout);
 
-        makeHistory();
+        //makeHistory();
         makeField();
         makeButtons();
 
@@ -64,25 +64,57 @@ public class Calculator extends JFrame implements ActionListener{
         container.add(history, constraints);
     }
 
+    public class History extends JPanel implements MouseListener {
 
-    public class History extends JPanel{
+        JLabel display;
+        ArrayList<Double> argFirst = new ArrayList<Double>();
+        ArrayList<Character> sign = new ArrayList<Character>();
+        ArrayList<Double> argSec = new ArrayList<Double>();
 
-        JLabel operation;
         History(){
             //this.setSize(new Dimension(100, 100));
             this.setBackground(Color.RED);
-            operation = new JLabel("");
-            this.add(operation);
+            display = new JLabel("");
+            this.add(display);
+            this.addMouseListener(this);
         }
 
         public void setOperation(String string){
-            operation.setText(string);
+            display.setText(string);
+        }
+
+        public void addOperation(String operation){
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
         }
     }
 
     public void makeField(){
         field = new JTextField(25);
-        field.addActionListener(this);
+        //field.addActionListener(this);
 
         constraints.gridx = 0;
         constraints.gridy = 1;
@@ -106,17 +138,25 @@ public class Calculator extends JFrame implements ActionListener{
 
         for(int i=0; i<3; i++){
             for(int j=0; j<3; j++){
-                JButton button = new JButton(Integer.toString(numbers[i][j]));
+                JButtonNumber button = new JButtonNumber(Integer.toString(numbers[i][j]), this);
                 constraints.gridx = 0 + j;
                 constraints.gridy = 4 + i;
                 constraints.gridheight = 1;
                 constraints.gridwidth = 1;
                 constraints.insets = new Insets(5,5,5,5);
+/*
+                button.addMouseListener(new MouseAdapter(){
+                    @Override
+                    public void mouseClicked(MouseEvent event){
+
+                    }
+                });
+*/
                 container.add(button, constraints);
             }
         }
 
-        JButton button = new JButton(Integer.toString(numbers[3][0]));
+        JButtonNumber button = new JButtonNumber(Integer.toString(numbers[3][0]), this);
         constraints.gridx = 1;
         constraints.gridy = 7;
         constraints.gridheight = 1;
@@ -127,7 +167,7 @@ public class Calculator extends JFrame implements ActionListener{
 
     public void makeSigns(){
 
-        JButton sign = new JButton(".");
+        JButtonAction sign = new JButtonAction(".", this);
         constraints.gridx = 0;
         constraints.gridy = 7;
         constraints.gridheight = 1;
@@ -135,7 +175,7 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        sign = new JButton("+/-");
+        sign = new JButtonAction("+/-", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 2;
         constraints.gridy = 7;
@@ -143,14 +183,8 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.gridwidth = 1;
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
-        sign.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent event){
-                System.out.println("+/-");
-           }
-        });
 
-        sign = new JButton("=");
+        sign = new JButtonAction("=", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 0;
         constraints.gridy = 8;
@@ -159,14 +193,7 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        sign = new JButton("C");
-        sign.addMouseListener(new MouseAdapter(){
-           @Override
-           public void mouseReleased(MouseEvent e){
-               history.setOperation(field.getText());
-               field.setText("");
-           }
-        });
+        sign = new JButtonAction("C", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 3;
         constraints.gridy = 4;
@@ -174,7 +201,7 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        sign = new JButton("CE");
+        sign = new JButtonAction("CE", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 3;
         constraints.gridy = 5;
@@ -182,7 +209,7 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        sign = new JButton("%");
+        sign = new JButtonAction("%", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 3;
         constraints.gridy = 6;
@@ -190,7 +217,7 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        sign = new JButton("sqrt");
+        sign = new JButtonAction("sqrt", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 4;
         constraints.gridy = 6;
@@ -198,7 +225,7 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        sign = new JButton("-");
+        sign = new JButtonAction("-", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 3;
         constraints.gridy = 7;
@@ -206,7 +233,7 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        sign = new JButton("/");
+        sign = new JButtonAction("/", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 4;
         constraints.gridy = 7;
@@ -214,7 +241,7 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        sign = new JButton("+");
+        sign = new JButtonAction("+", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 3;
         constraints.gridy = 8;
@@ -222,7 +249,7 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        sign = new JButton("*");
+        sign = new JButtonAction("*", this);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 4;
         constraints.gridy = 8;
@@ -230,12 +257,30 @@ public class Calculator extends JFrame implements ActionListener{
         constraints.insets = new Insets(5,5,5,5);
         container.add(sign, constraints);
 
-        //System.out.println(sign.getText());
     }
 
-    public void actionPerformed(ActionEvent e){
-        String text = field.getText();
-        System.out.println(text);
+    public void changeNegative(){
+        //System.out.println("inside" + result.length());
+        if(field.getText().length() > 0){
+
+            if(field.getText().substring(0,1).equals("-")){
+                field.setText(field.getText().substring(1));
+            }else{
+                field.setText("-" + field.getText());
+            }
+
+            System.out.println(result);
+        }
+    }
+
+    public void clearState(){
+        result="";
+        field.setText(result);
+        state=10;
+    }
+
+    public void clearField(){
+        field.setText("");
     }
 
     public static void main(String[] args){
