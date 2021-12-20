@@ -29,7 +29,7 @@ public class Calculator extends JFrame {
         result="";
     }
 
-    public void makeFrame(){
+    public void makeFrame(){ //makes JFrame -> Calculator class properties
         this.setSize(new Dimension(300, 300));
         this.setBackground(Color.GRAY);
         this.setVisible(true);
@@ -38,14 +38,14 @@ public class Calculator extends JFrame {
         this.setFocusable(true);
     }
 
-    public void makeLayout(){
+    public void makeLayout(){ //makes GridPaneLayout for buttons
         constraints = new GridBagConstraints();
         bagLayout = new GridBagLayout();
         container = this.getContentPane();
         container.setLayout(bagLayout);
 
         //makeHistory();
-        makeField();
+        makeField(); //makes JTextField for calculator's results
         makeButtons();
 
         container.setBackground(Color.LIGHT_GRAY);
@@ -112,7 +112,7 @@ public class Calculator extends JFrame {
         }
     }
 
-    public void makeField(){
+    public void makeField(){ //makes TextField for numbers
         field = new JTextField(25);
         //field.addActionListener(this);
 
@@ -124,7 +124,7 @@ public class Calculator extends JFrame {
         container.add(field, constraints);
     }
 
-    public void makeButtons(){
+    public void makeButtons(){ //makes Buttons
         makeNumbers();
         makeSigns();
     }
