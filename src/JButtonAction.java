@@ -5,108 +5,48 @@ import javax.swing.JTextField;
 import java.lang.Math;
 
 class JButtonAction extends JButton implements ActionListener{
+    /*
+        JButtonAction based on JButton
+        button for operations
+     */
 
-    private String operation;
+    private String operation;       //operation - property of button
     private Calculator calculator;
 
     public JButtonAction(String operation, Calculator calc){
         super(operation);
-
+        setFocusable(false);
         this.operation = operation;
         this.calculator = calc;
         this.addActionListener(this);
     }
 
-    public String concat(String sign){
-        return "";
-    }
-
-    public void sqrt(){
-        calculator.result = String.valueOf(Math.sqrt(Double.parseDouble(calculator.field.getText())));
-        calculator.field.setText(calculator.result);
-        setState();
-    }
-
-    public void makeDouble(){
-        if(! getNumber().contains(".")){
-            calculator.field.setText(getNumber()+".");
-        }
-    }
-
-    public void setOperation(char sign){
-        setState(sign);
-        //System.out.println("show state "+calculator.state);
-        calculator.result = getNumber();
-        setNumber();
-    }
-
-    public void calculate(){
-
-        if(calculator.state != ' '){
-            //System.out.println("state "+calculator.state);
-
-            switch(calculator.state){
-                case '+':
-                    //System.out.println("state +"+state);
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) + Double.parseDouble(getNumber()));
-                    //System.out.println("wynik +"+getNumber());
-                    //System.out.println("dodawanie");
-                    setNumber(calculator.result);
-                    break;
-                case '-':
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) - Double.parseDouble(getNumber()));
-                    setNumber(calculator.result);
-                    break;
-                case '*':
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) * Double.parseDouble(getNumber()));
-                    setNumber(calculator.result);
-                    break;
-                case '/':
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) / Double.parseDouble(getNumber()));
-                    setNumber(calculator.result);
-                    break;
-                case '%':
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) * Double.parseDouble(getNumber())/100);
-                    setNumber(calculator.result);
-                    break;
-                default:
-                    //System.out.println("derfault");
-                    break;
-            }
-            setState();
-        }
-    }
-
-    private String getNumber(){
-        return calculator.field.getText();
-    }
-
-    private void setNumber(){
-        calculator.field.setText("");
-    }
-
-    private void setNumber(String number){
-        calculator.field.setText(number);
-    }
-
-    private void setState(){
-        calculator.state = 10;
-    }
-
-    private void setState(char state){
-        calculator.state = state;
-        //System.out.println("setState" + calculator.state);
-    }
-
+    //listener
     @Override
     public void actionPerformed(ActionEvent e) {
+
+        /*
+        if operation = '.' then make double
+        else if operation = '+/-' then change sign for plus/minus of number -> changeNegative function
+        else if oepration = '+' then add two numbers
+        else if operation = '-' then subtract two numbers
+        else if operation = '*' then multiply two numbers
+        else if operation = '/' then divide two numbers
+        else if operation = '%' then calculate percent of number
+        else if operation = 'CE' then clear field
+        else if operation = 'C' then clear field with state
+        else if opertaion = '=' then calculate operation
+         */
+
+        setFocusable(false);
+
         if(operation.equals(".")){
             makeDouble();
         }else if(operation.equals("sqrt")){
             try{
                 sqrt();
             }catch(RuntimeException exception){
-                calculator.field.setText("0.0");
+                calculator.textField.setText("0.0");
             }
         }else if(operation.equals("+/-")){
             calculator.changeNegative();
@@ -127,5 +67,83 @@ class JButtonAction extends JButton implements ActionListener{
         }else if(operation.equals("=")){
             calculate();
         }
+    }
+
+    //calculates sqrt
+    public void sqrt(){
+        calculator.result = String.valueOf(Math.sqrt(Double.parseDouble(calculator.textField.getText())));
+        calculator.textField.setText(calculator.result);
+        setState();
+    }
+
+    //makes double from number in display
+    public void makeDouble(){
+        if(! getNumber().contains(".")){
+            calculator.textField.setText(getNumber()+".");
+        }
+    }
+
+    public void setOperation(char sign){
+        setState(sign);
+        calculator.result = getNumber();
+        setNumber();
+    }
+
+    //calculate result of operation
+    public void calculate(){
+
+        if(calculator.state != 10){
+
+            switch(calculator.state){
+                case '+':
+                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) + Double.parseDouble(getNumber()));
+                    setNumber(calculator.result);
+                    break;
+                case '-':
+                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) - Double.parseDouble(getNumber()));
+                    setNumber(calculator.result);
+                    break;
+                case '*':
+                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) * Double.parseDouble(getNumber()));
+                    setNumber(calculator.result);
+                    break;
+                case '/':
+                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) / Double.parseDouble(getNumber()));
+                    setNumber(calculator.result);
+                    break;
+                case '%':
+                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) * Double.parseDouble(getNumber())/100);
+                    setNumber(calculator.result);
+                    break;
+                default:
+                    break;
+            }
+            setState();
+        }
+    }
+
+    //take number from display
+    private String getNumber(){
+        return calculator.textField.getText();
+    }
+
+    //set number to default = 0
+    private void setNumber(){
+        calculator.textField.setText("0");
+    }
+
+    //set number in display
+    private void setNumber(String number){
+        calculator.textField.setText(number);
+    }
+
+    //set to default state
+    private void setState(){
+        calculator.state = 10;
+    }
+
+    //set current state of operation
+    private void setState(char state){
+        calculator.state = state;
     }
 }
