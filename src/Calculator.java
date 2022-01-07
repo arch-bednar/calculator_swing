@@ -218,6 +218,71 @@ public class Calculator extends JFrame {
 
     }
 
+    protected void calculate(){
+        if(state != 10){
+            //System.out.println("state "+calculator.state);
+
+            switch(state){
+                case '+':
+                    add();
+                    break;
+                case '-':
+                    sub();
+                    break;
+                case '*':
+                    mul();
+                    break;
+                case '/':
+                    div();
+                    break;
+                case '%':
+                    percent();
+                    break;
+                case 'q':
+                    sqrt();
+                    break;
+                default:
+                    break;
+            }
+            setState();
+        }
+    }
+
+    //calculates sqrt
+    private void sqrt(){
+        result = String.valueOf(Math.sqrt(Double.parseDouble(result)));
+        textField.setText(result);
+        setState();
+    }
+
+    private void add(){
+        //System.out.println("state +"+state);
+        result = String.valueOf(Double.parseDouble(result) + Double.parseDouble(getNumber()));
+        //System.out.println("wynik +"+getNumber());
+        //System.out.println("dodawanie");
+        setNumber(result);
+    }
+
+    private void sub(){
+        result = String.valueOf(Double.parseDouble(result) - Double.parseDouble(getNumber()));
+        setNumber(result);
+    }
+
+    private void mul(){
+        result = String.valueOf(Double.parseDouble(result) * Double.parseDouble(getNumber()));
+        setNumber(result);
+    }
+
+    private void div(){
+        result = String.valueOf(Double.parseDouble(result) / Double.parseDouble(getNumber()));
+        setNumber(result);
+    }
+
+    private void percent(){
+        result = String.valueOf(Double.parseDouble(result) * Double.parseDouble(getNumber())/100);
+        setNumber(result);
+    }
+
     public void changeNegative(){
         //System.out.println("inside" + result.length());
         if(textField.getText().length() > 0){
@@ -255,6 +320,32 @@ public class Calculator extends JFrame {
     //set number in display
     public void setText(String newString){
         textField.setText(newString);
+    }
+
+    public String getNumber(){
+        return getText();
+    }
+
+    public void setNumber(String number){
+        setText(number);
+    }
+
+    public void setNumber(){
+        setText();
+    }
+
+    public void setState(){
+        this.state = 10;
+    }
+
+    public void setState(char state){
+        this.state = state;
+    }
+
+    public void setOperation(char sign){
+        setState(sign);
+        result=getNumber();
+        setNumber();
     }
 
     public static void main(String[] args){

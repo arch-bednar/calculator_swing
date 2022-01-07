@@ -43,107 +43,38 @@ class JButtonAction extends JButton implements ActionListener{
         if(operation.equals(".")){
             makeDouble();
         }else if(operation.equals("sqrt")){
+            calculator.setOperation('q');
             try{
-                sqrt();
+                //sqrt();
+                calculator.calculate();
             }catch(RuntimeException exception){
                 calculator.textField.setText("0.0");
             }
         }else if(operation.equals("+/-")){
             calculator.changeNegative();
         }else if(operation.equals("+")){
-            setOperation('+');
+            calculator.setOperation('+');
         }else if(operation.equals("-")){
-            setOperation('-');
+            calculator.setOperation('-');
         }else if(operation.equals("*")){
-            setOperation('*');
+            calculator.setOperation('*');
         }else if(operation.equals("/")){
-            setOperation('/');
+            calculator.setOperation('/');
         }else if(operation.equals("%")){
-            setOperation('%');
+            calculator.setOperation('%');
         }else if(operation.equals("C")){
             calculator.clearState();
         }else if(operation.equals("CE")){
             calculator.clearField();
         }else if(operation.equals("=")){
-            calculate();
+            calculator.calculate();
         }
-    }
-
-    //calculates sqrt
-    public void sqrt(){
-        calculator.result = String.valueOf(Math.sqrt(Double.parseDouble(calculator.textField.getText())));
-        calculator.textField.setText(calculator.result);
-        setState();
     }
 
     //makes double from number in display
     public void makeDouble(){
-        if(! getNumber().contains(".")){
-            calculator.textField.setText(getNumber()+".");
+        if(! calculator.getNumber().contains(".")){
+            calculator.textField.setText(calculator.getNumber()+".");
         }
-    }
-
-    public void setOperation(char sign){
-        setState(sign);
-        calculator.result = getNumber();
-        setNumber();
-    }
-
-    //calculate result of operation
-    public void calculate(){
-
-        if(calculator.state != 10){
-
-            switch(calculator.state){
-                case '+':
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) + Double.parseDouble(getNumber()));
-                    setNumber(calculator.result);
-                    break;
-                case '-':
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) - Double.parseDouble(getNumber()));
-                    setNumber(calculator.result);
-                    break;
-                case '*':
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) * Double.parseDouble(getNumber()));
-                    setNumber(calculator.result);
-                    break;
-                case '/':
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) / Double.parseDouble(getNumber()));
-                    setNumber(calculator.result);
-                    break;
-                case '%':
-                    calculator.result = String.valueOf(Double.parseDouble(calculator.result) * Double.parseDouble(getNumber())/100);
-                    setNumber(calculator.result);
-                    break;
-                default:
-                    break;
-            }
-            setState();
-        }
-    }
-
-    //take number from display
-    private String getNumber(){
-        return calculator.textField.getText();
-    }
-
-    //set number to default = 0
-    private void setNumber(){
-        calculator.textField.setText("0");
-    }
-
-    //set number in display
-    private void setNumber(String number){
-        calculator.textField.setText(number);
-    }
-
-    //set to default state
-    private void setState(){
-        calculator.state = 10;
-    }
-
-    //set current state of operation
-    private void setState(char state){
-        calculator.state = state;
     }
 }
