@@ -82,7 +82,7 @@ public class Calculator extends JFrame {
         constraints.gridy = 1;
         constraints.gridheight = 2;
         constraints.gridwidth = 5;
-        //constraints.insets = new Insets(5,5,5,5);
+        constraints.insets = new Insets(0,0,5,0);
         container.add(textField, constraints);
     }
 
