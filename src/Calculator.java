@@ -83,10 +83,15 @@ public class Calculator extends JFrame {
         constraints.gridheight = 2;
         constraints.gridwidth = 5;
         constraints.insets = new Insets(0,0,5,0);
+        constraints.ipadx=0;
+        constraints.ipady=5;
         container.add(textField, constraints);
     }
 
     public void makeButtons(){ //makes Buttons
+        constraints.ipadx=0;
+        constraints.ipady=0;
+
         makeNumbers();
         makeSigns();
     }
